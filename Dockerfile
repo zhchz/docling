@@ -6,10 +6,10 @@ RUN apt-get update \
     && apt-get install -y libgl1 libglib2.0-0 curl wget git procps \
     && rm -rf /var/lib/apt/lists/*
 
-# This will install torch with *only* cpu support
-# Remove the --extra-index-url part if you want to install all the gpu requirements
-# For more details in the different torch distribution visit https://pytorch.org/.
-RUN pip install --no-cache-dir docling --extra-index-url https://download.pytorch.org/whl/cpu
+# This installs the CPU-only docling stack plus OCR extras required by docreader.
+# `rapidocr` pulls in the onnxruntime-backed OCR engine and `easyocr` provides
+# a secondary OCR fallback.
+RUN pip install --no-cache-dir "docling[rapidocr,easyocr]" --extra-index-url https://download.pytorch.org/whl/cpu
 
 ENV HF_HOME=/tmp/
 ENV TORCH_HOME=/tmp/
